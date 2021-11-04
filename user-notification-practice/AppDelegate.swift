@@ -19,7 +19,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let center = UNUserNotificationCenter.current()
 
-    center.requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+    // iOS15からのNotificationのアップデート
+    //  https://qiita.com/mogmet/items/7d5c2d205acc37ded4d1#3-time-sensitive%E3%81%AF%E3%81%99%E3%81%90%E3%81%AB%E6%B3%A8%E6%84%8F%E3%82%92%E6%89%95%E3%81%86%E5%BF%85%E8%A6%81%E3%81%8C%E3%81%82%E3%82%8B%E9%80%9A%E7%9F%A5
+
+    // システムの通知画面にアプリの設定画面を開くボタンを追加して、アプリ側でそれをハンドリングして画面遷移する方法
+    // https://dev.classmethod.jp/articles/user-notifications-open-inapp-settings/
+    // https://developer.apple.com/documentation/usernotifications/unauthorizationoptions
+
+    center.requestAuthorization(options: [
+      .alert,
+      .sound,
+      .badge,
+      .providesAppNotificationSettings,
+      .provisional,
+      .criticalAlert,
+      .carPlay,
+//      .announcement,
+//      .timeSensitive,
+      
+    ]) { (granted, error) in
 
       DispatchQueue.main.async {
         // プッシュ通知を受け取るようにAPNsに登録する
