@@ -47,8 +47,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       }
     }
 
-    center.delegate = self
-
     return true
   }
 
@@ -75,13 +73,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
 
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
-
-  func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
-    print(#function, "notification:\(notification)")
-    // 通知設定画面への遷移を実装
-
-  }
 }
