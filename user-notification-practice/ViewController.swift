@@ -18,13 +18,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     content.subtitle = "hogehogheohgeohge"
     content.body = "Let's talk about notifications!"
 
-    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 4, repeats: false)
-
-    let requestIdentifier = "sampleRequest"
     let request = UNNotificationRequest(
-      identifier: requestIdentifier,
+      identifier: "sampleRequest",
       content: content,
-      trigger: trigger
+      trigger: UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
     )
 
     let center = UNUserNotificationCenter.current()
@@ -47,6 +44,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+
+    title = "user notification practice"
+    navigationItem.largeTitleDisplayMode = .always
+    navigationController?.navigationBar.prefersLargeTitles = true
 
     let center = UNUserNotificationCenter.current()
 
