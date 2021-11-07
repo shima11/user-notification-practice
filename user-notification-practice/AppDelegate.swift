@@ -15,6 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
+
+    UNUserNotificationCenter.current().delegate = self
+
     return true
   }
 
@@ -40,5 +43,60 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
   }
 
+
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+  
+  func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification,
+    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+  ) {
+    print("notification foreground")
+
+    // フォアグラウンドの場合でも通知を表示する
+    if #available(iOS 14.0, *) {
+      completionHandler([.alert, .badge, .sound, .banner])
+    } else {
+      completionHandler([.alert, .badge, .sound])
+    }
+  }
+
+
+  func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+
+    print("notification did recieve")
+
+    let trigger = response.notification.request.trigger
+
+    switch trigger {
+    case is UNPushNotificationTrigger:
+      print("UNPushNotificationTrigger")
+    case is UNTimeIntervalNotificationTrigger:
+      print("UNTimeIntervalNotificationTrigger")
+    case is UNCalendarNotificationTrigger:
+      print("UNCalendarNotificationTrigger")
+    case is UNLocationNotificationTrigger:
+      print("UNLocationNotificationTrigger")
+    default:
+      break
+    }
+
+    // 通知の ID を取得
+    print("notification.request.identifier: \(response.notification.request.identifier)")
+
+    completionHandler()
+  }
+
+  func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
+    print("open settings notification:\(notification)")
+    // 通知設定画面への遷移を実装
+
+  }
 
 }

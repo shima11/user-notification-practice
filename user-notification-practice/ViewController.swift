@@ -9,7 +9,9 @@
 import UIKit
 import UserNotifications
 
-class ViewController: UIViewController, UNUserNotificationCenterDelegate {
+// https://www.raywenderlich.com/21458686-local-notifications-getting-started
+
+class ViewController: UIViewController {
 
   @IBAction func didTapButton(_ sender: Any) {
 
@@ -17,6 +19,9 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     content.title = "Introduction to Notifications"
     content.subtitle = "hogehogheohgeohge"
     content.body = "Let's talk about notifications!"
+    if #available(iOS 15.0, *) {
+      content.interruptionLevel = .timeSensitive
+    }
 
     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
     
@@ -26,19 +31,17 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
       trigger: trigger
     )
 
-    let center = UNUserNotificationCenter.current()
-
-    center.add(request) { (error) in
+    UNUserNotificationCenter.current().add(request) { (error) in
       if let error = error {
         print("error:", error)
       }
     }
 
-    center.getPendingNotificationRequests { (requests) in
+    UNUserNotificationCenter.current().getPendingNotificationRequests { (requests) in
       print("==========Pending Notification============")
       print(requests)
     }
-    center.getDeliveredNotifications { (notifications) in
+    UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
       print("==========Delivered Notifications============")
       print(notifications)
     }
@@ -54,8 +57,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     navigationItem.largeTitleDisplayMode = .always
     navigationController?.navigationBar.prefersLargeTitles = true
 
-    let center = UNUserNotificationCenter.current()
-
     // iOS15からのNotificationのアップデート
     //  https://qiita.com/mogmet/items/7d5c2d205acc37ded4d1#3-time-sensitive%E3%81%AF%E3%81%99%E3%81%90%E3%81%AB%E6%B3%A8%E6%84%8F%E3%82%92%E6%89%95%E3%81%86%E5%BF%85%E8%A6%81%E3%81%8C%E3%81%82%E3%82%8B%E9%80%9A%E7%9F%A5
 
@@ -64,7 +65,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     // https://developer.apple.com/documentation/usernotifications/unauthorizationoptions
 
     // 通知の許可をリクエスト
-    center.requestAuthorization(options: [
+    UNUserNotificationCenter.current().requestAuthorization(options: [
       .alert,
       .sound,
       .badge,
@@ -78,9 +79,9 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     ]) { [weak self] (granted, error) in
 
       if granted {
-        print("許可する")
+        print("許可")
       } else {
-        print("許可しない")
+        print("未許可")
       }
 
       self?.fetchNotificationSettings()
@@ -92,8 +93,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
 
     fetchNotificationSettings()
-
-    center.delegate = self
   }
 
   func fetchNotificationSettings() {
@@ -118,50 +117,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 //        settings.directMessagesSetting
       )
     }
-  }
-
-  func userNotificationCenter(
-    _ center: UNUserNotificationCenter,
-    willPresent notification: UNNotification,
-    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
-  ) {
-    print("notification foreground")
-
-    // フォアグラウンドの場合でも通知を表示する
-    completionHandler([.alert, .badge, .sound])
-  }
-
-
-  func userNotificationCenter(
-    _ center: UNUserNotificationCenter,
-    didReceive response: UNNotificationResponse,
-    withCompletionHandler completionHandler: @escaping () -> Void
-  ) {
-    
-    print("notification background")
-
-    let trigger = response.notification.request.trigger
-
-    switch trigger {
-    case is UNPushNotificationTrigger:
-      print("UNPushNotificationTrigger")
-    case is UNTimeIntervalNotificationTrigger:
-      print("UNTimeIntervalNotificationTrigger")
-    case is UNCalendarNotificationTrigger:
-      print("UNCalendarNotificationTrigger")
-    case is UNLocationNotificationTrigger:
-      print("UNLocationNotificationTrigger")
-    default:
-      break
-    }
-
-    completionHandler()
-  }
-
-  func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
-    print("open settings notification:\(notification)")
-    // 通知設定画面への遷移を実装
-
   }
 
 }
