@@ -18,10 +18,12 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     content.subtitle = "hogehogheohgeohge"
     content.body = "Let's talk about notifications!"
 
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+    
     let request = UNNotificationRequest(
       identifier: "sampleRequest",
       content: content,
-      trigger: UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+      trigger: trigger
     )
 
     let center = UNUserNotificationCenter.current()
@@ -42,6 +44,9 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
   }
 
+
+  private var settings: UNNotificationSettings? = nil
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -58,6 +63,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     // https://dev.classmethod.jp/articles/user-notifications-open-inapp-settings/
     // https://developer.apple.com/documentation/usernotifications/unauthorizationoptions
 
+    // 通知の許可をリクエスト
     center.requestAuthorization(options: [
       .alert,
       .sound,
@@ -69,26 +75,59 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 //      .announcement,
 //      .timeSensitive,
 
-    ]) { (granted, error) in
+    ]) { [weak self] (granted, error) in
+
+      if granted {
+        print("許可する")
+      } else {
+        print("許可しない")
+      }
+
+      self?.fetchNotificationSettings()
 
       DispatchQueue.main.async {
         // プッシュ通知を受け取るようにAPNsに登録する
-        UIApplication
-          .shared
-          .registerForRemoteNotifications()
+        UIApplication.shared.registerForRemoteNotifications()
       }
     }
+
+    fetchNotificationSettings()
 
     center.delegate = self
   }
 
-  // フォアグラウンドの場合でも通知を表示する
+  func fetchNotificationSettings() {
+    UNUserNotificationCenter.current().getNotificationSettings { settings in
+      self.settings = settings
+      print(
+        "notification settings:\n",
+        "authorizationStatus:", settings.authorizationStatus.rawValue, "\n",
+        "soundSetting:", settings.soundSetting.rawValue, "\n",
+        "badgeSetting:", settings.badgeSetting.rawValue, "\n",
+        "alertSetting:", settings.alertSetting.rawValue, "\n",
+        "notificationCenterSetting:", settings.notificationCenterSetting.rawValue, "\n",
+        "lockScreenSetting:", settings.lockScreenSetting.rawValue, "\n",
+        "carPlaySetting:", settings.carPlaySetting.rawValue, "\n",
+        "alertStyle:", settings.alertStyle.rawValue, "\n",
+        "showPreviewsSetting:", settings.showPreviewsSetting.rawValue, "\n",
+        "criticalAlertSetting:", settings.criticalAlertSetting.rawValue, "\n",
+        "providesAppNotificationSettings:", settings.providesAppNotificationSettings, "\n",
+        "announcementSettin:", settings.announcementSetting.rawValue
+//        settings.timeSensitiveSetting,
+//        settings.scheduledDeliverySetting,
+//        settings.directMessagesSetting
+      )
+    }
+  }
+
   func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     willPresent notification: UNNotification,
     withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
   ) {
     print("notification foreground")
+
+    // フォアグラウンドの場合でも通知を表示する
     completionHandler([.alert, .badge, .sound])
   }
 

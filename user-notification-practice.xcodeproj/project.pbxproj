@@ -15,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		049C45082738290E0064B251 /* user-notification-practice.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "user-notification-practice.entitlements"; sourceTree = "<group>"; };
 		D45B834621C7FA8600D0F976 /* user-notification-practice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "user-notification-practice.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D45B834921C7FA8600D0F976 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D45B834B21C7FA8600D0F976 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -54,6 +55,7 @@
 		D45B834821C7FA8600D0F976 /* user-notification-practice */ = {
 			isa = PBXGroup;
 			children = (
+				049C45082738290E0064B251 /* user-notification-practice.entitlements */,
 				D45B834921C7FA8600D0F976 /* AppDelegate.swift */,
 				D45B834B21C7FA8600D0F976 /* ViewController.swift */,
 				D45B834D21C7FA8600D0F976 /* Main.storyboard */,
@@ -282,6 +284,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "user-notification-practice/user-notification-practice.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "user-notification-practice/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -300,6 +303,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "user-notification-practice/user-notification-practice.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "user-notification-practice/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
