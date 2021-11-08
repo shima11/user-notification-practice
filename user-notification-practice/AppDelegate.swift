@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -57,7 +58,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
     // フォアグラウンドの場合でも通知を表示する
     if #available(iOS 14.0, *) {
-      completionHandler([.alert, .badge, .sound, .banner])
+      completionHandler([.alert, .badge, .sound, .banner, .list])
     } else {
       completionHandler([.alert, .badge, .sound])
     }

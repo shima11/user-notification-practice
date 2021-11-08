@@ -23,6 +23,8 @@ class ViewController: UIViewController {
       content.interruptionLevel = .timeSensitive
     }
 
+    // TODO: 他の通知の種類も送れるようにする（位置、時間、...）
+
     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
     
     let request = UNNotificationRequest(
@@ -78,6 +80,7 @@ class ViewController: UIViewController {
 
     ]) { [weak self] (granted, error) in
 
+      // TODO: grantedを画面に表示
       if granted {
         print("許可")
       } else {
@@ -98,6 +101,7 @@ class ViewController: UIViewController {
   func fetchNotificationSettings() {
     UNUserNotificationCenter.current().getNotificationSettings { settings in
       self.settings = settings
+      // TODO: notification settingsを画面に表示
       print(
         "notification settings:\n",
         "authorizationStatus:", settings.authorizationStatus.rawValue, "\n",
